@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Blog - SkillSwap{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--gradient-1); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.5rem; font-weight:800;">SkillSwap Blog</h1>
+        <p style="opacity:0.8; font-size:1.1rem;">Tips, stories, and insights about skill exchange</p>
+        {% if current_user.is_authenticated and current_user.is_admin %}
+        <a href="{{ url_for('blog.create_post') }}" class="btn btn-light mt-3">
+            <i class="fas fa-plus"></i> New Blog Post
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+
+        {% if posts %}
+        <div class="row g-4">
+            {% for post in posts %}
+            <div class="col-md-4">
+                <div class="card h-100" style="border:1px solid var(--gray-200); border-radius:var(--radius-lg); overflow:hidden;">
+                    <!-- Color Bar -->
+                    <div style="height:6px; background:var(--gradient-1);"></div>
+
+                    <div class="card-body p-4">
+                        {% if post.category %}
+                        <span class="badge mb-2" style="background:rgba(79,70,229,0.1); color:var(--primary); font-weight:600;">
+                            {{ post.category }}
+                        </span>
+                        {% endif %}
+
+                        <h4 class="fw-bold" style="color:var(--gray-900); font-size:1.15rem; line-height:1.4;">
+                            <a href="{{ url_for('blog.blog_detail', slug=post.slug) }}" class="text-decoration-none" style="color:var(--gray-900);">
+                                {{ post.title }}
+                            </a>
+                        </h4>
+
+                        {% if post.excerpt %}
+                        <p style="color:var(--gray-500); font-size:0.9rem; line-height:1.7; margin-top:12px;">
+                            {{ post.excerpt[:150] }}{% if post.excerpt|length > 150 %}...{% endif %}
+                        </p>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top:1px solid var(--gray-100);">
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width:28px;height:28px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.7rem;">
+                                    {{ post.author.full_name[0] }}
+                                </div>
+                                <small style="color:var(--gray-500);">{{ post.author.full_name }}</small>
+                            </div>
+                            <small style="color:var(--gray-400);">{{ post.created_at.strftime('%b %d, %Y') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <div style="font-size:4rem; opacity:0.15;"><i class="fas fa-blog"></i></div>
+            <h4 class="fw-bold" style="color:var(--gray-700);">No Blog Posts Yet</h4>
+            <p style="color:var(--gray-500);">Check back soon for articles and tips!</p>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

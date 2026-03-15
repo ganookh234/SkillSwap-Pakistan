@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}About Us - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- About Hero -->
+<section class="section" style="background:var(--gradient-1); color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:3rem; font-weight:800; letter-spacing:-1.5px; margin-bottom:16px;">
+            About SkillSwap
+        </h1>
+        <p style="font-size:1.2rem; opacity:0.8; max-width:600px; margin:0 auto;">
+            We're building the world's first peer-to-peer skill exchange platform,
+            where knowledge is the only currency.
+        </p>
+    </div>
+</section>
+
+<!-- Mission -->
+<section class="section section-light">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-md-6">
+                <span class="section-label"><i class="fas fa-bullseye"></i> OUR MISSION</span>
+                <h2 class="section-title">Democratizing Education Through Skill Exchange</h2>
+                <p style="color:var(--gray-500); font-size:1.05rem; line-height:1.8;">
+                    We believe everyone has something valuable to teach. Our mission is to create
+                    a world where anyone can learn any skill, regardless of their financial situation.
+                    By enabling direct skill-for-skill exchanges, we're building a true knowledge economy.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card feature-card text-center">
+                            <div style="font-size:2.5rem; font-weight:900; color:var(--primary);">5K+</div>
+                            <p class="mb-0 fw-bold">Active Users</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card feature-card text-center">
+                            <div style="font-size:2.5rem; font-weight:900; color:var(--success);">200+</div>
+                            <p class="mb-0 fw-bold">Skills Listed</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card feature-card text-center">
+                            <div style="font-size:2.5rem; font-weight:900; color:var(--warning);">50+</div>
+                            <p class="mb-0 fw-bold">Cities</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card feature-card text-center">
+                            <div style="font-size:2.5rem; font-weight:900; color:var(--danger);">4.9</div>
+                            <p class="mb-0 fw-bold">Avg Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values -->
+<section class="section section-gray">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-label"><i class="fas fa-heart"></i> OUR VALUES</span>
+            <h2 class="section-title">What We Stand For</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="feature-icon mx-auto" style="background:rgba(79,70,229,0.1); color:var(--primary);">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h4>Community First</h4>
+                    <p>We put our community at the heart of everything we do, fostering genuine connections between learners and teachers.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="feature-icon mx-auto" style="background:rgba(16,185,129,0.1); color:var(--success);">
+                        <i class="fas fa-universal-access"></i>
+                    </div>
+                    <h4>Equal Access</h4>
+                    <p>Education should be accessible to everyone. We break down financial barriers by enabling free skill exchanges.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100 text-center">
+                    <div class="feature-icon mx-auto" style="background:rgba(245,158,11,0.1); color:var(--warning);">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h4>Lifelong Learning</h4>
+                    <p>We believe learning never stops. Every person is both a student and a teacher — and that's beautiful.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Join Our Growing Community</h2>
+        <p>Be part of the skill exchange revolution. Start learning and teaching today.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg" style="position:relative;z-index:1;">
+            Get Started Free <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1>Welcome back, {{ current_user.full_name }}! 👋</h1>
+                <p>Here's an overview of your skill exchange activity.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('skills.add_skill') }}" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Add Skill
+                </a>
+                <a href="{{ url_for('matching.find_matches') }}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3);">
+                    <i class="fas fa-search"></i> Find Matches
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="position:relative; z-index:1; padding-top:20px;">
+
+    <!-- Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card">
+                <div class="stat-icon" style="background:var(--gradient-1);">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3>{{ current_user.skills_offering|length }}</h3>
+                <p>Teaching Skills</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card">
+                <div class="stat-icon" style="background:var(--gradient-5);">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <h3>{{ current_user.skills_wanted|length }}</h3>
+                <p>Learning Goals</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card">
+                <div class="stat-icon" style="background:var(--gradient-3);">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>{{ unread_count }}</h3>
+                <p>Unread Messages</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card">
+                <div class="stat-icon" style="background:var(--gradient-4);">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>0</h3>
+                <p>Active Swaps</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="dash-content-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chalkboard-teacher" style="color:var(--primary);"></i>
+                        Skills I Can Teach
+                    </h4>
+                    <a href="{{ url_for('skills.add_skill') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Add
+                    </a>
+                </div>
+                {% if current_user.skills_offering %}
+                    {% for skill in current_user.skills_offering %}
+                    <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--gray-100);">
+                        <div>
+                            <span class="skill-badge offering">
+                                <i class="fas fa-check-circle"></i> {{ skill.skill_name }}
+                            </span>
+                            {% if skill.skill_level %}
+                            <small style="color:var(--gray-400); margin-left:4px;">{{ skill.skill_level|capitalize }}</small>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('skills.delete_skill', skill_type='offering', skill_id=skill.id) }}" style="color:var(--gray-400); font-size:0.85rem;" title="Remove">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-plus-circle"></i>
+                    <p>You haven't added any teaching skills yet.</p>
+                    <a href="{{ url_for('skills.add_skill') }}" class="btn btn-primary btn-sm">Add Your First Skill</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="dash-content-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-book-reader" style="color:var(--success);"></i>
+                        Skills I Want to Learn
+                    </h4>
+                    <a href="{{ url_for('skills.add_skill') }}" class="btn btn-sm" style="background:var(--success); color:white;">
+                        <i class="fas fa-plus"></i> Add
+                    </a>
+                </div>
+                {% if current_user.skills_wanted %}
+                    {% for skill in current_user.skills_wanted %}
+                    <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--gray-100);">
+                        <span class="skill-badge wanted">
+                            <i class="fas fa-arrow-circle-up"></i> {{ skill.skill_name }}
+                        </span>
+                        <a href="{{ url_for('skills.delete_skill', skill_type='wanted', skill_id=skill.id) }}" style="color:var(--gray-400); font-size:0.85rem;" title="Remove">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-plus-circle"></i>
+                    <p>Tell us what you'd like to learn.</p>
+                    <a href="{{ url_for('skills.add_skill') }}" class="btn btn-sm" style="background:var(--success); color:white;">Add Learning Goal</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="{{ url_for('skills.explore') }}" class="text-decoration-none">
+                <div class="dash-content-card text-center" style="cursor:pointer;">
+                    <i class="fas fa-search fa-2x mb-3" style="color:var(--primary);"></i>
+                    <h5 class="fw-bold">Explore Skills</h5>
+                    <p style="color:var(--gray-500); font-size:0.9rem;">Browse members and their skills</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('matching.find_matches') }}" class="text-decoration-none">
+                <div class="dash-content-card text-center" style="cursor:pointer;">
+                    <i class="fas fa-handshake fa-2x mb-3" style="color:var(--success);"></i>
+                    <h5 class="fw-bold">Find Matches</h5>
+                    <p style="color:var(--gray-500); font-size:0.9rem;">Discover perfect swap partners</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ url_for('profile.my_profile') }}" class="text-decoration-none">
+                <div class="dash-content-card text-center" style="cursor:pointer;">
+                    <i class="fas fa-user fa-2x mb-3" style="color:var(--warning);"></i>
+                    <h5 class="fw-bold">My Profile</h5>
+                    <p style="color:var(--gray-500); font-size:0.9rem;">View and edit your profile</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div style="height:60px;"></div>
+
+{% endblock %}

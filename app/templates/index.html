@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+{% block title %}SkillSwap - Exchange Skills, Grow Together{% endblock %}
+
+{% block content %}
+
+<!-- ========== HERO SECTION ========== -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-badge">
+                    <i class="fas fa-circle"></i> #1 Skill Exchange Platform
+                </div>
+                <h1 class="hero-title">
+                    Exchange Skills,<br>
+                    <span class="gradient-text">Grow Together</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Teach what you know, learn what you don't. Connect with skilled
+                    people and exchange knowledge — completely free, no money involved.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                        Start Swapping Free <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-outline-dark btn-lg">
+                        <i class="fas fa-play-circle"></i> How It Works
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <h3>5,000+</h3>
+                        <p>Active Members</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>200+</h3>
+                        <p>Skills Available</p>
+                    </div>
+                    <div class="hero-stat">
+                        <h3>95%</h3>
+                        <p>Satisfaction Rate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="hero-image-container">
+                    <div class="hero-image-card">
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div style="width:50px;height:50px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">A</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Ahmed Khan</h6>
+                                <small class="text-muted">Lahore, Pakistan</small>
+                            </div>
+                            <span class="badge bg-success ms-auto">Online</span>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted fw-bold">CAN TEACH</small>
+                            <div class="mt-1">
+                                <span class="skill-badge offering">Python</span>
+                                <span class="skill-badge offering">JavaScript</span>
+                                <span class="skill-badge offering">React</span>
+                            </div>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold">WANTS TO LEARN</small>
+                            <div class="mt-1">
+                                <span class="skill-badge wanted">UI/UX Design</span>
+                                <span class="skill-badge wanted">Figma</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-floating-card card-1">
+                        <div class="floating-icon" style="background:var(--gradient-5);">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:0.85rem;">New Match!</strong><br>
+                            <small class="text-muted">Sarah wants to swap skills</small>
+                        </div>
+                    </div>
+                    <div class="hero-floating-card card-2">
+                        <div class="floating-icon" style="background:var(--gradient-3);">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:0.85rem;">4.9 Rating</strong><br>
+                            <small class="text-muted">From 120 reviews</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FEATURES ========== -->
+<section class="section section-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-label"><i class="fas fa-sparkles"></i> WHY SKILLSWAP</span>
+            <h2 class="section-title">Everything You Need to<br>Exchange Skills</h2>
+            <p class="section-subtitle mx-auto">Our platform makes it easy to find the perfect skill exchange partner and start learning today.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI-Powered Matching</h4>
+                    <p>Our smart algorithm finds the perfect skill exchange partners based on your skills, location, and preferences.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h4>100% Free Exchange</h4>
+                    <p>No money changes hands. Simply teach what you know and learn what you want — a pure knowledge economy.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(245,158,11,0.1); color:var(--warning);">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h4>Built-in Video Chat</h4>
+                    <p>Connect with your skill partner through integrated text, voice, and video calling — no third-party apps needed.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Verified Profiles</h4>
+                    <p>Every user goes through verification. Reviews and ratings help you choose trusted learning partners.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(124,58,237,0.1); color:var(--secondary);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h4>Flexible Scheduling</h4>
+                    <p>Set your own availability and schedule sessions at times that work for both you and your partner.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card h-100">
+                    <div class="feature-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h4>Skill Certificates</h4>
+                    <p>Earn verified certificates as you complete skill exchanges. Showcase your growing expertise.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="section section-gray" id="how-it-works">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-label"><i class="fas fa-route"></i> HOW IT WORKS</span>
+            <h2 class="section-title">Start Exchanging in<br>3 Simple Steps</h2>
+            <p class="section-subtitle mx-auto">Getting started takes less than 2 minutes. Here's how it works.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 step-card h-100 bg-transparent">
+                    <div class="step-number">1</div>
+                    <div class="step-connector d-none d-md-block"></div>
+                    <h4 class="fw-bold">Create Your Profile</h4>
+                    <p class="text-muted">Sign up and list the skills you can teach and the skills you want to learn.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 step-card h-100 bg-transparent">
+                    <div class="step-number">2</div>
+                    <div class="step-connector d-none d-md-block"></div>
+                    <h4 class="fw-bold">Get Matched</h4>
+                    <p class="text-muted">Our AI finds people who want to learn what you teach, and teach what you want to learn.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 step-card h-100 bg-transparent">
+                    <div class="step-number">3</div>
+                    <h4 class="fw-bold">Start Learning</h4>
+                    <p class="text-muted">Connect via chat or video call and begin your skill exchange journey!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CATEGORIES ========== -->
+<section class="section section-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-label"><i class="fas fa-th-large"></i> CATEGORIES</span>
+            <h2 class="section-title">Explore Popular<br>Skill Categories</h2>
+            <p class="section-subtitle mx-auto">From technology to arts, find the perfect skill to learn or teach.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(79,70,229,0.1); color:var(--primary);">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h5>Programming</h5>
+                    <p>120+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(16,185,129,0.1); color:var(--success);">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h5>Languages</h5>
+                    <p>45+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(245,158,11,0.1); color:var(--warning);">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h5>Design & Art</h5>
+                    <p>65+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(239,68,68,0.1); color:var(--danger);">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h5>Music</h5>
+                    <p>30+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(124,58,237,0.1); color:var(--secondary);">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h5>Business</h5>
+                    <p>50+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(59,130,246,0.1); color:var(--info);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h5>Photography</h5>
+                    <p>25+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(236,72,153,0.1); color:#EC4899;">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h5>Cooking</h5>
+                    <p>40+ Skills</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                <div class="card category-card h-100">
+                    <div class="category-icon" style="background:rgba(20,184,166,0.1); color:#14B8A6;">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h5>Health & Fitness</h5>
+                    <p>35+ Skills</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== STATS ========== -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h2>5,000+</h2>
+                    <p>Registered Users</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h2>12,000+</h2>
+                    <p>Skills Exchanged</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h2>50+</h2>
+                    <p>Cities Covered</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stat-item">
+                    <h2>4.9/5</h2>
+                    <p>Average Rating</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== TESTIMONIALS ========== -->
+<section class="section section-gray">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="section-label"><i class="fas fa-quote-left"></i> TESTIMONIALS</span>
+            <h2 class="section-title">What Our Community Says</h2>
+            <p class="section-subtitle mx-auto">Hear from real members who have transformed their skills through SkillSwap.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <blockquote>"I taught Python and learned graphic design in return. SkillSwap made it incredibly easy to find the right partner. Highly recommended!"</blockquote>
+                    <div class="testimonial-author">
+                        <div style="width:48px;height:48px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">A</div>
+                        <div>
+                            <h6>Ahmed Raza</h6>
+                            <span>Software Developer, Lahore</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <blockquote>"As a stay-at-home mom, I exchanged my cooking skills for English lessons. This platform is a game-changer for lifelong learners!"</blockquote>
+                    <div class="testimonial-author">
+                        <div style="width:48px;height:48px;border-radius:50%;background:var(--gradient-3);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">S</div>
+                        <div>
+                            <h6>Sarah Ali</h6>
+                            <span>Home Chef, Karachi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card testimonial-card h-100">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <blockquote>"The AI matching system is brilliant! It found me someone who needed my photography skills and could teach me video editing."</blockquote>
+                    <div class="testimonial-author">
+                        <div style="width:48px;height:48px;border-radius:50%;background:var(--gradient-4);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">U</div>
+                        <div>
+                            <h6>Usman Sheikh</h6>
+                            <span>Photographer, Islamabad</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CTA SECTION ========== -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Ready to Start Your<br>Skill Exchange Journey?</h2>
+        <p>Join thousands of learners and teachers exchanging skills every day.</p>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg" style="position:relative;z-index:1;">
+            Create Free Account <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Find Matches - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<section style="background:var(--gradient-1); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.5rem; font-weight:800; letter-spacing:-1px;">
+            <i class="fas fa-handshake"></i> Your Skill Matches
+        </h1>
+        <p style="opacity:0.8; font-size:1.1rem;">
+            We found people who match your skill exchange needs
+        </p>
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+
+        {% if matches %}
+        <p class="mb-4" style="color:var(--gray-600); font-weight:500;">
+            <i class="fas fa-check-circle" style="color:var(--success);"></i>
+            {{ matches|length }} potential match{{ 'es' if matches|length != 1 else '' }} found!
+        </p>
+
+        <div class="row g-4">
+            {% for match in matches %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100" style="border:1px solid var(--gray-200); border-radius:var(--radius-lg); overflow:hidden;">
+
+                    <!-- Match Score Bar -->
+                    <div style="height:4px; background:{% if match.score >= 70 %}var(--success){% elif match.score >= 40 %}var(--warning){% else %}var(--gray-300){% endif %};"></div>
+
+                    <div class="card-body p-4">
+
+                        <!-- User Info -->
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div style="width:55px;height:55px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.3rem;">
+                                {{ match.user.full_name[0] }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-0 fw-bold" style="font-size:1rem;">{{ match.user.full_name }}</h5>
+                                {% if match.user.city %}
+                                <small style="color:var(--gray-500);">
+                                    <i class="fas fa-map-marker-alt"></i> {{ match.user.city }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            <!-- Score Badge -->
+                            <div style="width:48px;height:48px;border-radius:50%;background:{% if match.score >= 70 %}rgba(16,185,129,0.1){% elif match.score >= 40 %}rgba(245,158,11,0.1){% else %}var(--gray-100){% endif %};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:{% if match.score >= 70 %}var(--success){% elif match.score >= 40 %}var(--warning){% else %}var(--gray-500){% endif %};">
+                                {{ match.score }}%
+                            </div>
+                        </div>
+
+                        <!-- Exchange Details -->
+                        <div style="background:var(--gray-50); border-radius:var(--radius); padding:16px; margin-bottom:16px;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="text-center flex-grow-1">
+                                    <small class="d-block fw-bold" style="color:var(--gray-500); font-size:0.7rem; text-transform:uppercase;">They Teach</small>
+                                    <span class="skill-badge offering" style="font-size:0.8rem; padding:4px 10px;">{{ match.their_skill }}</span>
+                                </div>
+                                <div style="color:var(--primary); font-size:1.2rem; padding:0 10px;">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <div class="text-center flex-grow-1">
+                                    <small class="d-block fw-bold" style="color:var(--gray-500); font-size:0.7rem; text-transform:uppercase;">You Learn</small>
+                                    <span class="skill-badge wanted" style="font-size:0.8rem; padding:4px 10px;">{{ match.my_wanted_skill }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mutual Match Badge -->
+                        {% if match.mutual %}
+                        <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:var(--radius-sm); padding:10px; margin-bottom:16px; text-align:center;">
+                            <i class="fas fa-check-circle" style="color:var(--success);"></i>
+                            <span style="color:var(--success); font-weight:600; font-size:0.85rem;">
+                                Mutual Match! They want to learn {{ match.exchange_skill }}
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        <!-- Level & Action -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="color:var(--gray-500); font-size:0.85rem;">
+                                <i class="fas fa-signal"></i> {{ match.their_level|capitalize }}
+                            </span>
+                            <a href="{{ url_for('profile.view_profile', user_id=match.user.id) }}" class="btn btn-primary btn-sm">
+                                View Profile <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- No Matches -->
+        <div class="text-center py-5">
+            <div style="font-size:5rem; opacity:0.15; margin-bottom:20px;">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <h3 class="fw-bold" style="color:var(--gray-700);">No Matches Found Yet</h3>
+            <p style="color:var(--gray-500); max-width:500px; margin:12px auto 24px;">
+                Add more skills to your profile so we can find the best exchange partners for you.
+                The more skills you add, the better matches you'll get!
+            </p>
+            <a href="{{ url_for('skills.add_skill') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add Skills
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

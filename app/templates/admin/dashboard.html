@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Admin Header -->
+<section style="background:var(--gray-900); padding:40px 0; color:white;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 style="font-size:1.8rem; font-weight:800;">
+                    <i class="fas fa-shield-alt" style="color:var(--warning);"></i> Admin Dashboard
+                </h1>
+                <p style="color:var(--gray-400); margin:0;">Manage your SkillSwap platform</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('admin.manage_users') }}" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-users"></i> Users
+                </a>
+                <a href="{{ url_for('admin.manage_categories') }}" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-tags"></i> Categories
+                </a>
+                <a href="{{ url_for('admin.view_messages') }}" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-gray" style="padding-top:40px;">
+    <div class="container">
+
+        <!-- Stats -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="dash-stat-card">
+                    <div class="stat-icon" style="background:var(--gradient-1);"><i class="fas fa-users"></i></div>
+                    <h3>{{ total_users }}</h3>
+                    <p>Total Users</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="dash-stat-card">
+                    <div class="stat-icon" style="background:var(--gradient-5);"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>{{ total_skills }}</h3>
+                    <p>Teaching Skills</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="dash-stat-card">
+                    <div class="stat-icon" style="background:var(--gradient-3);"><i class="fas fa-book-reader"></i></div>
+                    <h3>{{ total_wanted }}</h3>
+                    <p>Learning Goals</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="dash-stat-card">
+                    <div class="stat-icon" style="background:var(--gradient-4);"><i class="fas fa-envelope"></i></div>
+                    <h3>{{ total_messages }}</h3>
+                    <p>Total Messages</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Recent Users -->
+            <div class="col-md-8">
+                <div class="dash-content-card">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0"><i class="fas fa-user-clock" style="color:var(--primary);"></i> Recent Users</h4>
+                        <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary btn-sm">View All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="font-size:0.9rem;">
+                            <thead style="background:var(--gray-50);">
+                                <tr>
+                                    <th style="border:none; padding:12px; color:var(--gray-500); font-weight:600;">User</th>
+                                    <th style="border:none; padding:12px; color:var(--gray-500); font-weight:600;">Email</th>
+                                    <th style="border:none; padding:12px; color:var(--gray-500); font-weight:600;">City</th>
+                                    <th style="border:none; padding:12px; color:var(--gray-500); font-weight:600;">Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr>
+                                    <td style="padding:12px; border-color:var(--gray-100);">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div style="width:32px;height:32px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.75rem;">
+                                                {{ user.full_name[0] }}
+                                            </div>
+                                            <span class="fw-600">{{ user.full_name }}</span>
+                                            {% if user.is_admin %}
+                                            <span class="badge" style="background:var(--warning); color:var(--gray-900); font-size:0.65rem;">Admin</span>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                    <td style="padding:12px; border-color:var(--gray-100); color:var(--gray-500);">{{ user.email }}</td>
+                                    <td style="padding:12px; border-color:var(--gray-100); color:var(--gray-500);">{{ user.city or '-' }}</td>
+                                    <td style="padding:12px; border-color:var(--gray-100); color:var(--gray-400);">{{ user.created_at.strftime('%b %d, %Y') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- City Stats -->
+            <div class="col-md-4">
+                <div class="dash-content-card">
+                    <h4><i class="fas fa-map-marker-alt" style="color:var(--danger);"></i> Top Cities</h4>
+                    {% for city, count in city_stats %}
+                    <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--gray-100);">
+                        <span style="color:var(--gray-700); font-weight:500;">{{ city }}</span>
+                        <span class="badge" style="background:rgba(79,70,229,0.1); color:var(--primary); font-weight:700; padding:6px 12px;">{{ count }}</span>
+                    </div>
+                    {% endfor %}
+                    {% if not city_stats %}
+                    <p style="color:var(--gray-400); text-align:center; padding:20px;">No data yet</p>
+                    {% endif %}
+                </div>
+
+                <div class="dash-content-card mt-4">
+                    <h4><i class="fas fa-tags" style="color:var(--success);"></i> Categories</h4>
+                    <div style="font-size:2.5rem; font-weight:900; color:var(--primary); text-align:center; padding:20px;">
+                        {{ total_categories }}
+                    </div>
+                    <p style="text-align:center; color:var(--gray-500);">Active Categories</p>
+                    <a href="{{ url_for('admin.manage_categories') }}" class="btn btn-primary btn-sm w-100">Manage Categories</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Reviews for {{ user.full_name }} - SkillSwap{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--gradient-1); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:2rem;margin:0 auto 16px;border:3px solid rgba(255,255,255,0.3);">
+            {{ user.full_name[0] }}
+        </div>
+        <h1 style="font-size:2rem; font-weight:800;">Reviews for {{ user.full_name }}</h1>
+        <div style="margin-top:12px;">
+            <span style="font-size:1.3rem;">
+                {% for i in range(5) %}
+                <i class="fas fa-star" style="color:{% if i < user.get_avg_rating()|round %}#F59E0B{% else %}rgba(255,255,255,0.3){% endif %};"></i>
+                {% endfor %}
+            </span>
+            <span style="font-size:1.1rem; margin-left:8px;">{{ user.get_avg_rating() }} / 5</span>
+            <span style="opacity:0.7; margin-left:4px;">({{ user.get_review_count() }} reviews)</span>
+        </div>
+
+        {% if current_user.is_authenticated and current_user.id != user.id %}
+        <a href="{{ url_for('reviews.write_review', user_id=user.id) }}" class="btn btn-light mt-3">
+            <i class="fas fa-pen"></i> Write a Review
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                {% if reviews %}
+                {% for review in reviews %}
+                <div class="dash-content-card mb-3">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:45px;height:45px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">
+                                {{ review.reviewer.full_name[0] }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ review.reviewer.full_name }}</h6>
+                                <small style="color:var(--gray-400);">{{ review.created_at.strftime('%B %d, %Y') }}</small>
+                            </div>
+                        </div>
+                        <div>
+                            {% for i in range(5) %}
+                            <i class="fas fa-star" style="color:{% if i < review.rating %}#F59E0B{% else %}var(--gray-300){% endif %}; font-size:0.9rem;"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if review.skill_name %}
+                    <div class="mt-2">
+                        <span class="skill-badge offering" style="font-size:0.8rem; padding:4px 12px;">
+                            <i class="fas fa-exchange-alt"></i> {{ review.skill_name }}
+                        </span>
+                    </div>
+                    {% endif %}
+
+                    <p style="color:var(--gray-600); margin-top:12px; line-height:1.7;">{{ review.review_text }}</p>
+
+                    {% if current_user.is_authenticated and (current_user.id == review.reviewer_id or current_user.is_admin) %}
+                    <a href="{{ url_for('reviews.delete_review', review_id=review.id) }}" style="color:var(--gray-400); font-size:0.8rem;" onclick="return confirm('Delete this review?');">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                {% else %}
+                <div class="dash-content-card text-center py-5">
+                    <div style="font-size:4rem; opacity:0.15;"><i class="fas fa-star"></i></div>
+                    <h4 class="fw-bold" style="color:var(--gray-700);">No Reviews Yet</h4>
+                    <p style="color:var(--gray-500);">Be the first to review {{ user.full_name }}!</p>
+                    {% if current_user.is_authenticated and current_user.id != user.id %}
+                    <a href="{{ url_for('reviews.write_review', user_id=user.id) }}" class="btn btn-primary">
+                        <i class="fas fa-pen"></i> Write a Review
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block title %}Chat with {{ other_user.full_name }} - SkillSwap{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        height: calc(100vh - 80px);
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-left: 1px solid var(--gray-200);
+        border-right: 1px solid var(--gray-200);
+    }
+
+    .chat-header {
+        padding: 16px 24px;
+        background: white;
+        border-bottom: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-shrink: 0;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+        background: var(--gray-50);
+    }
+
+    .msg-bubble {
+        max-width: 70%;
+        padding: 12px 18px;
+        border-radius: 18px;
+        margin-bottom: 8px;
+        position: relative;
+        animation: msgIn 0.3s ease;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+
+    @keyframes msgIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg-sent {
+        background: var(--primary);
+        color: white;
+        margin-left: auto;
+        border-bottom-right-radius: 6px;
+    }
+
+    .msg-received {
+        background: white;
+        color: var(--gray-800);
+        margin-right: auto;
+        border-bottom-left-radius: 6px;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .msg-time {
+        font-size: 0.7rem;
+        opacity: 0.6;
+        margin-top: 4px;
+    }
+
+    .msg-sent .msg-time { text-align: right; }
+    .msg-received .msg-time { text-align: left; }
+
+    .msg-date-divider {
+        text-align: center;
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .msg-date-divider span {
+        background: var(--gray-50);
+        padding: 4px 16px;
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        position: relative;
+        z-index: 1;
+    }
+
+    .msg-date-divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--gray-200);
+    }
+
+    .chat-input-area {
+        padding: 16px 24px;
+        background: white;
+        border-top: 1px solid var(--gray-200);
+        flex-shrink: 0;
+    }
+
+    .chat-input-area .form-control {
+        border-radius: var(--radius-full);
+        padding: 14px 20px;
+        font-size: 0.95rem;
+        border: 2px solid var(--gray-200);
+        background: var(--gray-50);
+    }
+
+    .chat-input-area .form-control:focus {
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    }
+
+    .chat-send-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--gradient-1);
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(79,70,229,0.3);
+    }
+
+    .chat-send-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(79,70,229,0.4);
+    }
+
+    @media (max-width: 768px) {
+        .msg-bubble { max-width: 85%; }
+        .chat-wrapper { height: calc(100vh - 60px); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="chat-wrapper">
+
+    <!-- Chat Header -->
+    <div class="chat-header">
+        <a href="{{ url_for('chat.chat_list') }}" style="color:var(--gray-500); font-size:1.2rem; text-decoration:none;">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div style="width:42px;height:42px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1rem;">
+            {{ other_user.full_name[0] }}
+        </div>
+        <div class="flex-grow-1">
+            <h6 class="mb-0 fw-bold" style="font-size:0.95rem;">{{ other_user.full_name }}</h6>
+            {% if other_user.city %}
+            <small style="color:var(--gray-500); font-size:0.8rem;">
+                <i class="fas fa-map-marker-alt"></i> {{ other_user.city }}
+            </small>
+            {% endif %}
+        </div>
+        <a href="{{ url_for('profile.view_profile', user_id=other_user.id) }}" class="btn btn-sm btn-outline-dark" style="border-radius:var(--radius-full);">
+            View Profile
+        </a>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="chat-messages" id="chatMessages">
+
+        {% if not messages %}
+        <div class="text-center py-5">
+            <div style="width:80px;height:80px;border-radius:50%;background:rgba(79,70,229,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--primary);font-size:2rem;">
+                <i class="fas fa-hand-peace"></i>
+            </div>
+            <h5 class="fw-bold" style="color:var(--gray-700);">Start the Conversation!</h5>
+            <p style="color:var(--gray-500); font-size:0.9rem;">
+                Say hello to {{ other_user.full_name.split()[0] }} and start exchanging skills.
+            </p>
+        </div>
+        {% endif %}
+
+        {% set current_date = namespace(value='') %}
+        {% for msg in messages %}
+
+            <!-- Date Divider -->
+            {% set msg_date = msg.sent_at.strftime('%B %d, %Y') %}
+            {% if msg_date != current_date.value %}
+                {% set current_date.value = msg_date %}
+                <div class="msg-date-divider">
+                    <span>{{ msg_date }}</span>
+                </div>
+            {% endif %}
+
+            <!-- Message Bubble -->
+            <div class="d-flex {% if msg.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %} mb-2">
+                <div class="msg-bubble {% if msg.sender_id == current_user.id %}msg-sent{% else %}msg-received{% endif %}">
+                    {{ msg.message_text }}
+                    <div class="msg-time">
+                        {{ msg.sent_at.strftime('%I:%M %p') }}
+                        {% if msg.sender_id == current_user.id %}
+                            {% if msg.is_read %}
+                            <i class="fas fa-check-double" style="margin-left:4px;"></i>
+                            {% else %}
+                            <i class="fas fa-check" style="margin-left:4px;"></i>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area">
+        <form method="POST" action="{{ url_for('chat.chat_room', user_id=other_user.id) }}" class="d-flex gap-3 align-items-center">
+            <input type="text" name="message" class="form-control" placeholder="Type your message..." autocomplete="off" autofocus required>
+            <button type="submit" class="chat-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+</div>
+
+{% block extra_js %}
+<script>
+    // Auto scroll to bottom
+    var chatMessages = document.getElementById('chatMessages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Auto refresh every 5 seconds
+    setInterval(function() {
+        var currentScroll = chatMessages.scrollTop;
+        var isAtBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= currentScroll + 50;
+
+        fetch(window.location.href)
+            .then(function(response) { return response.text(); })
+            .then(function(html) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
+                var newMessages = doc.getElementById('chatMessages');
+                if (newMessages && newMessages.innerHTML !== chatMessages.innerHTML) {
+                    chatMessages.innerHTML = newMessages.innerHTML;
+                    if (isAtBottom) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+            });
+    }, 5000);
+</script>
+{% endblock %}
+
+{% endblock %}

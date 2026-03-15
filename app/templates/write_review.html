@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Write Review - SkillSwap{% endblock %}
+
+{% block extra_css %}
+<style>
+    .star-rating { display:flex; gap:8px; flex-direction:row-reverse; justify-content:center; }
+    .star-rating input { display:none; }
+    .star-rating label { font-size:2.5rem; color:var(--gray-300); cursor:pointer; transition:all 0.2s ease; }
+    .star-rating label:hover, .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label { color:var(--warning); transform:scale(1.1); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card card border-0">
+                    <div class="card-body">
+                        <div class="auth-header">
+                            <div class="auth-icon" style="background:linear-gradient(135deg, #F59E0B, #EF4444);">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h2>Write a Review</h2>
+                            <p>Share your experience with {{ user.full_name }}</p>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="d-flex align-items-center gap-3 mb-4 p-3" style="background:var(--gray-50); border-radius:var(--radius);">
+                            <div style="width:50px;height:50px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.2rem;">
+                                {{ user.full_name[0] }}
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ user.full_name }}</h6>
+                                {% if user.city %}
+                                <small style="color:var(--gray-500);"><i class="fas fa-map-marker-alt"></i> {{ user.city }}</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('reviews.write_review', user_id=user.id) }}">
+
+                            <!-- Star Rating -->
+                            <div class="mb-4 text-center">
+                                <label class="form-label fw-bold d-block mb-2">Your Rating</label>
+                                <div class="star-rating">
+                                    <input type="radio" name="rating" value="5" id="star5" checked>
+                                    <label for="star5"><i class="fas fa-star"></i></label>
+                                    <input type="radio" name="rating" value="4" id="star4">
+                                    <label for="star4"><i class="fas fa-star"></i></label>
+                                    <input type="radio" name="rating" value="3" id="star3">
+                                    <label for="star3"><i class="fas fa-star"></i></label>
+                                    <input type="radio" name="rating" value="2" id="star2">
+                                    <label for="star2"><i class="fas fa-star"></i></label>
+                                    <input type="radio" name="rating" value="1" id="star1">
+                                    <label for="star1"><i class="fas fa-star"></i></label>
+                                </div>
+                            </div>
+
+                            <!-- Skill -->
+                            <div class="mb-3">
+                                <label class="form-label">Skill Exchanged (Optional)</label>
+                                <input type="text" name="skill_name" class="form-control" placeholder="e.g. Python, English...">
+                            </div>
+
+                            <!-- Review Text -->
+                            <div class="mb-4">
+                                <label class="form-label">Your Review</label>
+                                <textarea name="review_text" class="form-control" rows="4" placeholder="Share your experience..." required style="border-radius:var(--radius);"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-paper-plane"></i> Submit Review
+                            </button>
+
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('profile.view_profile', user_id=user.id) }}" style="color:var(--gray-500); text-decoration:none;">
+                                    <i class="fas fa-arrow-left"></i> Back to Profile
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

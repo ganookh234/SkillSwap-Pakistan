@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{% if post %}Edit Post{% else %}New Blog Post{% endif %} - SkillSwap{% endblock %}
+
+{% block content %}
+<section class="section section-gray">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="dash-content-card">
+                    <h4>
+                        <i class="fas fa-pen-fancy" style="color:var(--primary);"></i>
+                        {% if post %}Edit Blog Post{% else %}Create New Blog Post{% endif %}
+                    </h4>
+
+                    <form method="POST" action="{% if post %}{{ url_for('blog.edit_post', post_id=post.id) }}{% else %}{{ url_for('blog.create_post') }}{% endif %}">
+
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" class="form-control" placeholder="Enter post title" value="{{ post.title if post else '' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="">Select category</option>
+                                {% for cat in ['Tips & Tricks', 'Success Stories', 'How-To Guides', 'Platform Updates', 'Skill Spotlight', 'Community'] %}
+                                <option value="{{ cat }}" {% if post and post.category == cat %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Excerpt (Short Description)</label>
+                            <textarea name="excerpt" class="form-control" rows="2" placeholder="Brief summary of the post..." style="border-radius:var(--radius);">{{ post.excerpt if post else '' }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Content</label>
+                            <textarea name="content" class="form-control" rows="15" placeholder="Write your blog post content here... (HTML supported)" required style="border-radius:var(--radius); font-family:monospace; font-size:0.9rem;">{{ post.content if post else '' }}</textarea>
+                            <small style="color:var(--gray-400);">You can use HTML tags for formatting</small>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> {% if post %}Update Post{% else %}Publish Post{% endif %}
+                            </button>
+                            <a href="{{ url_for('blog.blog_list') }}" class="btn btn-outline-dark btn-lg">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Pricing - SkillSwap{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--gradient-1); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.5rem; font-weight:800; letter-spacing:-1px;">Simple, Transparent Pricing</h1>
+        <p style="opacity:0.8; font-size:1.1rem;">Start free and upgrade as you grow. No hidden fees.</p>
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+
+            <!-- Free Plan -->
+            <div class="col-md-4">
+                <div class="card h-100" style="border:2px solid var(--gray-200); border-radius:var(--radius-xl); padding:40px 30px; text-align:center;">
+                    <div style="color:var(--gray-500); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Free</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--gray-900); letter-spacing:-2px;">$0</div>
+                    <p style="color:var(--gray-500); margin-bottom:32px;">Forever free</p>
+                    <hr style="border-color:var(--gray-200);">
+                    <ul style="list-style:none; padding:0; text-align:left; margin:24px 0;">
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> 3 skill matches per month
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Basic profile
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Text messaging
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-400); font-size:0.95rem;">
+                            <i class="fas fa-times" style="color:var(--gray-300); margin-right:10px;"></i> Video calls
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-400); font-size:0.95rem;">
+                            <i class="fas fa-times" style="color:var(--gray-300); margin-right:10px;"></i> Priority matching
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-400); font-size:0.95rem;">
+                            <i class="fas fa-times" style="color:var(--gray-300); margin-right:10px;"></i> Verified badge
+                        </li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-dark btn-lg w-100 mt-auto">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="col-md-4">
+                <div class="card h-100" style="border:2px solid var(--primary); border-radius:var(--radius-xl); padding:40px 30px; text-align:center; position:relative; box-shadow:0 20px 40px rgba(79,70,229,0.15);">
+                    <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:var(--gradient-1); color:white; padding:6px 20px; border-radius:var(--radius-full); font-size:0.8rem; font-weight:700;">MOST POPULAR</div>
+                    <div style="color:var(--primary); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Pro</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--gray-900); letter-spacing:-2px;">$9<span style="font-size:1.2rem; color:var(--gray-400);">/mo</span></div>
+                    <p style="color:var(--gray-500); margin-bottom:32px;">Best for active learners</p>
+                    <hr style="border-color:var(--gray-200);">
+                    <ul style="list-style:none; padding:0; text-align:left; margin:24px 0;">
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Unlimited matches
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Enhanced profile
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Text & voice messaging
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Video calls
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Priority matching
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-400); font-size:0.95rem;">
+                            <i class="fas fa-times" style="color:var(--gray-300); margin-right:10px;"></i> Verified badge
+                        </li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg w-100 mt-auto">
+                        Upgrade to Pro <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="col-md-4">
+                <div class="card h-100" style="border:2px solid var(--gray-200); border-radius:var(--radius-xl); padding:40px 30px; text-align:center;">
+                    <div style="color:var(--gray-500); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Enterprise</div>
+                    <div style="font-size:3.5rem; font-weight:900; color:var(--gray-900); letter-spacing:-2px;">$29<span style="font-size:1.2rem; color:var(--gray-400);">/mo</span></div>
+                    <p style="color:var(--gray-500); margin-bottom:32px;">For power users</p>
+                    <hr style="border-color:var(--gray-200);">
+                    <ul style="list-style:none; padding:0; text-align:left; margin:24px 0;">
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Everything in Pro
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Verified badge
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Featured profile
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Priority support
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Analytics dashboard
+                        </li>
+                        <li style="padding:10px 0; color:var(--gray-600); font-size:0.95rem;">
+                            <i class="fas fa-check" style="color:var(--success); margin-right:10px;"></i> Skill certificates
+                        </li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-dark btn-lg w-100 mt-auto">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Verify Your Account - SkillSwap{% endblock %}
+
+{% block extra_css %}
+<style>
+    .otp-inputs {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 30px 0;
+    }
+
+    .otp-input {
+        width: 55px;
+        height: 65px;
+        text-align: center;
+        font-size: 1.8rem;
+        font-weight: 800;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius);
+        background: var(--gray-50);
+        color: var(--gray-900);
+        transition: all 0.3s ease;
+        font-family: 'Inter', monospace;
+    }
+
+    .otp-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        background: white;
+        outline: none;
+    }
+
+    .otp-input.filled {
+        border-color: var(--primary);
+        background: rgba(79, 70, 229, 0.03);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="auth-card card border-0">
+                    <div class="card-body" style="padding:48px 40px;">
+
+                        <div class="auth-header">
+                            <div class="auth-icon" style="background:linear-gradient(135deg, #10B981, #059669);">
+                                <i class="fas fa-envelope-open-text"></i>
+                            </div>
+                            <h2>Verify Your Email</h2>
+                            <p>We sent a 6-digit code to</p>
+                            <p style="color:var(--primary); font-weight:700; font-size:1rem; margin-top:-8px;">
+                                {{ user.email }}
+                            </p>
+                        </div>
+
+                        <!-- Email Check Reminder -->
+                        <div style="background:rgba(59,130,246,0.05); border:1px solid rgba(59,130,246,0.15); border-radius:var(--radius); padding:14px; text-align:center; margin-bottom:24px;">
+                            <p style="color:var(--info); font-size:0.9rem; margin:0; font-weight:500;">
+                                <i class="fas fa-inbox"></i> Check your email inbox for the verification code
+                            </p>
+                            <p style="color:var(--gray-400); font-size:0.75rem; margin:6px 0 0;">
+                                Also check your spam/junk folder
+                            </p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('auth.verify_otp') }}" id="otpForm">
+
+                            <input type="hidden" name="otp" id="otpHidden">
+
+                            <p class="text-center fw-bold mb-2" style="color:var(--gray-700); font-size:0.9rem;">
+                                Enter the 6-digit code:
+                            </p>
+
+                            <!-- OTP Input Boxes -->
+                            <div class="otp-inputs">
+                                <input type="text" maxlength="1" class="otp-input" data-index="0" autofocus>
+                                <input type="text" maxlength="1" class="otp-input" data-index="1">
+                                <input type="text" maxlength="1" class="otp-input" data-index="2">
+                                <input type="text" maxlength="1" class="otp-input" data-index="3">
+                                <input type="text" maxlength="1" class="otp-input" data-index="4">
+                                <input type="text" maxlength="1" class="otp-input" data-index="5">
+                            </div>
+
+                            <!-- Timer -->
+                            <p class="text-center mb-4" style="color:var(--gray-500); font-size:0.9rem;">
+                                ⏰ Code expires in <span id="timer" style="color:var(--primary); font-weight:700;">10:00</span>
+                            </p>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-check-circle"></i> Verify Account
+                            </button>
+                        </form>
+
+                        <!-- Resend -->
+                        <div class="text-center mt-4">
+                            <p style="color:var(--gray-500); font-size:0.9rem; margin-bottom:8px;">
+                                Didn't receive the code?
+                            </p>
+                            <a href="{{ url_for('auth.resend_otp') }}" class="btn btn-sm btn-outline-dark" style="border-radius:var(--radius-full);">
+                                <i class="fas fa-redo"></i> Resend Code
+                            </a>
+                        </div>
+
+                        <!-- Back -->
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('auth.register') }}" style="color:var(--gray-400); text-decoration:none; font-size:0.85rem;">
+                                <i class="fas fa-arrow-left"></i> Back to Register
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    var inputs = document.querySelectorAll('.otp-input');
+    var hiddenInput = document.getElementById('otpHidden');
+    var form = document.getElementById('otpForm');
+
+    inputs.forEach(function(input, index) {
+
+        input.addEventListener('input', function(e) {
+            var value = e.target.value;
+            e.target.value = value.replace(/[^0-9]/g, '');
+
+            if (e.target.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+
+            if (e.target.value) {
+                e.target.classList.add('filled');
+            } else {
+                e.target.classList.remove('filled');
+            }
+
+            updateHiddenInput();
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                inputs[index - 1].focus();
+                inputs[index - 1].value = '';
+                inputs[index - 1].classList.remove('filled');
+            }
+        });
+
+        input.addEventListener('paste', function(e) {
+            e.preventDefault();
+            var pasteData = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+
+            for (var i = 0; i < pasteData.length && i < inputs.length; i++) {
+                inputs[i].value = pasteData[i];
+                inputs[i].classList.add('filled');
+            }
+
+            if (pasteData.length >= inputs.length) {
+                inputs[inputs.length - 1].focus();
+            } else if (pasteData.length > 0) {
+                inputs[pasteData.length].focus();
+            }
+
+            updateHiddenInput();
+        });
+    });
+
+    function updateHiddenInput() {
+        var otp = '';
+        inputs.forEach(function(input) {
+            otp += input.value;
+        });
+        hiddenInput.value = otp;
+    }
+
+    form.addEventListener('submit', function(e) {
+        updateHiddenInput();
+        if (hiddenInput.value.length !== 6) {
+            e.preventDefault();
+            alert('Please enter all 6 digits!');
+        }
+    });
+
+    // Countdown Timer
+    var timeLeft = 600;
+    var timerEl = document.getElementById('timer');
+
+    var countdown = setInterval(function() {
+        timeLeft--;
+        var minutes = Math.floor(timeLeft / 60);
+        var seconds = timeLeft % 60;
+        timerEl.textContent = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+
+        if (timeLeft <= 60) {
+            timerEl.style.color = 'var(--danger)';
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            timerEl.textContent = 'Expired!';
+            timerEl.style.color = 'var(--danger)';
+        }
+    }, 1000);
+
+});
+</script>
+{% endblock %}
+
+{% endblock %}

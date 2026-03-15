@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+{% block title %}{{ user.full_name }} - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Profile Header -->
+<section style="background:var(--gradient-1); padding:80px 0 60px; color:white; text-align:center; position:relative;">
+    <div class="container">
+        <!-- Avatar -->
+        <div style="width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:3rem;margin:0 auto 20px;border:4px solid rgba(255,255,255,0.3);">
+            {{ user.full_name[0] }}
+        </div>
+
+        <h1 style="font-size:2rem; font-weight:800; margin-bottom:8px;">{{ user.full_name }}</h1>
+
+        {% if user.city %}
+        <p style="opacity:0.8; font-size:1.1rem; margin-bottom:8px;">
+            <i class="fas fa-map-marker-alt"></i> {{ user.city }}
+        </p>
+        {% endif %}
+
+        {% if user.bio %}
+        <p style="opacity:0.7; max-width:500px; margin:0 auto 20px; font-size:0.95rem;">
+            {{ user.bio }}
+        </p>
+        {% endif %}
+
+        <p style="opacity:0.6; font-size:0.85rem;">
+            <i class="fas fa-calendar-alt"></i> Member since {{ user.created_at.strftime('%B %Y') }}
+        </p>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+
+            {% if current_user.is_authenticated and current_user.id == user.id %}
+            <a href="{{ url_for('profile.edit_profile') }}" class="btn btn-light">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="{{ url_for('skills.add_skill') }}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3);">
+                <i class="fas fa-plus"></i> Add Skill
+            </a>
+            {% endif %}
+
+            {% if current_user.is_authenticated and current_user.id != user.id %}
+            <a href="{{ url_for('chat.start_chat', user_id=user.id) }}" class="btn btn-light">
+                <i class="fas fa-comment-dots"></i> Send Message
+            </a>
+            <a href="{{ url_for('profile.view_profile', user_id=user.id) }}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border:1px solid rgba(255,255,255,0.3);">
+                <i class="fas fa-exchange-alt"></i> Request Swap
+            </a>
+            {% endif %}
+
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-light">
+                <i class="fas fa-sign-in-alt"></i> Sign In to Connect
+            </a>
+            {% endif %}
+
+        </div>
+    </div>
+</section>
+
+<!-- Profile Content -->
+<section class="section section-gray">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Left Column - Info -->
+            <div class="col-md-4">
+
+                <!-- Information Card -->
+                <div class="dash-content-card mb-4">
+                    <h4>
+                        <i class="fas fa-info-circle" style="color:var(--info);"></i>
+                        Information
+                    </h4>
+                    <div style="font-size:0.95rem;">
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-500);">Name</span>
+                            <span class="fw-600">{{ user.full_name }}</span>
+                        </div>
+                        {% if user.email and current_user.is_authenticated and current_user.id == user.id %}
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-500);">Email</span>
+                            <span class="fw-600">{{ user.email }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.phone and current_user.is_authenticated and current_user.id == user.id %}
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-500);">Phone</span>
+                            <span class="fw-600">{{ user.phone }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.city %}
+                        <div class="d-flex justify-content-between py-2" style="border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-500);">City</span>
+                            <span class="fw-600">{{ user.city }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between py-2">
+                            <span style="color:var(--gray-500);">Joined</span>
+                            <span class="fw-600">{{ user.created_at.strftime('%b %d, %Y') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Card -->
+                <div class="dash-content-card mb-4">
+                    <h4>
+                        <i class="fas fa-chart-bar" style="color:var(--warning);"></i>
+                        Stats
+                    </h4>
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <div style="background:var(--gray-50); border-radius:var(--radius); padding:16px 8px;">
+                                <h5 class="fw-bold mb-0" style="color:var(--primary);">{{ user.skills_offering|length }}</h5>
+                                <small style="color:var(--gray-500); font-size:0.75rem;">Teaching</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div style="background:var(--gray-50); border-radius:var(--radius); padding:16px 8px;">
+                                <h5 class="fw-bold mb-0" style="color:var(--success);">{{ user.skills_wanted|length }}</h5>
+                                <small style="color:var(--gray-500); font-size:0.75rem;">Learning</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div style="background:var(--gray-50); border-radius:var(--radius); padding:16px 8px;">
+                                <h5 class="fw-bold mb-0" style="color:var(--warning);">0</h5>
+                                <small style="color:var(--gray-500); font-size:0.75rem;">Swaps</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Send Message Card (for other users) -->
+                {% if current_user.is_authenticated and current_user.id != user.id %}
+                <div class="dash-content-card">
+                    <h4>
+                        <i class="fas fa-paper-plane" style="color:var(--primary);"></i>
+                        Quick Message
+                    </h4>
+                    <p style="color:var(--gray-500); font-size:0.9rem;">
+                        Interested in swapping skills with {{ user.full_name.split()[0] }}?
+                    </p>
+                    <a href="{{ url_for('chat.start_chat', user_id=user.id) }}" class="btn btn-primary w-100">
+                        <i class="fas fa-comment-dots"></i> Start Conversation
+                    </a>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Right Column - Skills -->
+            <div class="col-md-8">
+
+                <!-- Teaching Skills -->
+                <div class="dash-content-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-chalkboard-teacher" style="color:var(--primary);"></i>
+                            Skills {{ user.full_name.split()[0] }} Can Teach
+                        </h4>
+                        {% if current_user.is_authenticated and current_user.id == user.id %}
+                        <a href="{{ url_for('skills.add_skill') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Add
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    {% if user.skills_offering %}
+                    <div class="row g-3">
+                        {% for skill in user.skills_offering %}
+                        <div class="col-md-6">
+                            <div style="background:var(--gray-50); border-radius:var(--radius); padding:16px; border-left:4px solid var(--primary); position:relative;">
+                                <h6 class="fw-bold mb-1" style="color:var(--gray-800);">{{ skill.skill_name }}</h6>
+                                {% if skill.skill_level %}
+                                <span class="badge" style="background:rgba(79,70,229,0.1); color:var(--primary); font-weight:600;">
+                                    {{ skill.skill_level|capitalize }}
+                                </span>
+                                {% endif %}
+                                {% if skill.description %}
+                                <p style="color:var(--gray-500); font-size:0.85rem; margin:8px 0 0;">{{ skill.description[:100] }}</p>
+                                {% endif %}
+
+                                {% if current_user.is_authenticated and current_user.id == user.id %}
+                                <a href="{{ url_for('skills.delete_skill', skill_type='offering', skill_id=skill.id) }}"
+                                   style="position:absolute; top:12px; right:12px; color:var(--gray-400); font-size:0.8rem;"
+                                   title="Remove skill"
+                                   onclick="return confirm('Are you sure you want to remove this skill?');">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-plus-circle"></i>
+                        <p>No teaching skills added yet.</p>
+                        {% if current_user.is_authenticated and current_user.id == user.id %}
+                        <a href="{{ url_for('skills.add_skill') }}" class="btn btn-primary btn-sm">Add Your First Skill</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Wanted Skills -->
+                <div class="dash-content-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">
+                            <i class="fas fa-book-reader" style="color:var(--success);"></i>
+                            Skills {{ user.full_name.split()[0] }} Wants to Learn
+                        </h4>
+                        {% if current_user.is_authenticated and current_user.id == user.id %}
+                        <a href="{{ url_for('skills.add_skill') }}" class="btn btn-sm" style="background:var(--success); color:white;">
+                            <i class="fas fa-plus"></i> Add
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    {% if user.skills_wanted %}
+                    <div>
+                        {% for skill in user.skills_wanted %}
+                        <div class="d-inline-flex align-items-center" style="margin:4px;">
+                            <span class="skill-badge wanted">
+                                <i class="fas fa-arrow-circle-up"></i> {{ skill.skill_name }}
+                            </span>
+                            {% if current_user.is_authenticated and current_user.id == user.id %}
+                            <a href="{{ url_for('skills.delete_skill', skill_type='wanted', skill_id=skill.id) }}"
+                               style="color:var(--gray-400); font-size:0.75rem; margin-left:4px;"
+                               title="Remove"
+                               onclick="return confirm('Remove this learning goal?');">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-plus-circle"></i>
+                        <p>No learning goals added yet.</p>
+                        {% if current_user.is_authenticated and current_user.id == user.id %}
+                        <a href="{{ url_for('skills.add_skill') }}" class="btn btn-sm" style="background:var(--success); color:white;">Add Learning Goal</a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Account Settings (only for own profile) -->
+                {% if current_user.is_authenticated and current_user.id == user.id %}
+                <div class="dash-content-card">
+                    <h4>
+                        <i class="fas fa-cog" style="color:var(--gray-500);"></i>
+                        Quick Actions
+                    </h4>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('profile.edit_profile') }}" class="text-decoration-none">
+                                <div style="background:var(--gray-50); border-radius:var(--radius); padding:20px; text-align:center; transition:all 0.3s ease;" onmouseover="this.style.background='rgba(79,70,229,0.05)'" onmouseout="this.style.background='var(--gray-50)'">
+                                    <i class="fas fa-user-edit" style="font-size:1.5rem; color:var(--primary); margin-bottom:8px; display:block;"></i>
+                                    <span style="color:var(--gray-700); font-weight:600; font-size:0.9rem;">Edit Profile</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('skills.add_skill') }}" class="text-decoration-none">
+                                <div style="background:var(--gray-50); border-radius:var(--radius); padding:20px; text-align:center; transition:all 0.3s ease;" onmouseover="this.style.background='rgba(16,185,129,0.05)'" onmouseout="this.style.background='var(--gray-50)'">
+                                    <i class="fas fa-plus-circle" style="font-size:1.5rem; color:var(--success); margin-bottom:8px; display:block;"></i>
+                                    <span style="color:var(--gray-700); font-weight:600; font-size:0.9rem;">Add Skill</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('matching.find_matches') }}" class="text-decoration-none">
+                                <div style="background:var(--gray-50); border-radius:var(--radius); padding:20px; text-align:center; transition:all 0.3s ease;" onmouseover="this.style.background='rgba(245,158,11,0.05)'" onmouseout="this.style.background='var(--gray-50)'">
+                                    <i class="fas fa-search" style="font-size:1.5rem; color:var(--warning); margin-bottom:8px; display:block;"></i>
+                                    <span style="color:var(--gray-700); font-weight:600; font-size:0.9rem;">Find Matches</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

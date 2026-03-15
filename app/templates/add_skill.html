@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Add Skill - SkillSwap{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card card border-0">
+                    <div class="card-body">
+                        <div class="auth-header">
+                            <div class="auth-icon" style="background: var(--gradient-5);">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <h2>Add a Skill</h2>
+                            <p>Tell us what you can teach or want to learn</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('skills.add_skill') }}">
+
+                            <!-- Skill Type -->
+                            <div class="mb-4">
+                                <label class="form-label">What would you like to do?</label>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <input type="radio" name="skill_type" value="offering" id="typeTeach" class="btn-check" checked>
+                                        <label class="btn btn-outline-primary w-100 py-3" for="typeTeach" style="border-radius:var(--radius);">
+                                            <i class="fas fa-chalkboard-teacher d-block mb-1" style="font-size:1.3rem;"></i>
+                                            I Can Teach
+                                        </label>
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="radio" name="skill_type" value="wanted" id="typeLearn" class="btn-check">
+                                        <label class="btn btn-outline-success w-100 py-3" for="typeLearn" style="border-radius:var(--radius);">
+                                            <i class="fas fa-book-reader d-block mb-1" style="font-size:1.3rem;"></i>
+                                            I Want to Learn
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Skill Name -->
+                            <div class="mb-3">
+                                <label class="form-label">Skill Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lightbulb"></i></span>
+                                    <input type="text" name="skill_name" class="form-control" placeholder="e.g. Python, Guitar, English..." required>
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <select name="category_id" class="form-select">
+                                    <option value="">Select a category</option>
+                                    {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Skill Level (only for teaching) -->
+                            <div class="mb-3" id="levelSection">
+                                <label class="form-label">Your Skill Level</label>
+                                <select name="skill_level" class="form-select">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate" selected>Intermediate</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label class="form-label">Description (Optional)</label>
+                                <textarea name="description" class="form-control" rows="3" placeholder="Tell us more about your experience with this skill..." style="border-radius:var(--radius);"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-plus-circle"></i> Add Skill
+                            </button>
+
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('main.dashboard') }}" style="color:var(--gray-500); text-decoration:none; font-size:0.9rem;">
+                                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+    // Show/hide skill level based on type
+    document.querySelectorAll('input[name="skill_type"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            var levelSection = document.getElementById('levelSection');
+            if (this.value === 'wanted') {
+                levelSection.style.display = 'none';
+            } else {
+                levelSection.style.display = 'block';
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

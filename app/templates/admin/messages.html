@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Messages Log - Admin{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--gray-900); padding:40px 0; color:white;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 style="font-size:1.8rem; font-weight:800;">
+                    <i class="fas fa-envelope" style="color:var(--info);"></i> Messages Log
+                </h1>
+                <p style="color:var(--gray-400); margin:0;">Recent 50 messages</p>
+            </div>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:white;">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section section-gray" style="padding-top:30px;">
+    <div class="container">
+        <div class="dash-content-card" style="padding:0; overflow:hidden;">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" style="font-size:0.88rem;">
+                    <thead style="background:var(--gray-50);">
+                        <tr>
+                            <th style="border:none; padding:12px; color:var(--gray-500);">From</th>
+                            <th style="border:none; padding:12px; color:var(--gray-500);">To</th>
+                            <th style="border:none; padding:12px; color:var(--gray-500);">Message</th>
+                            <th style="border:none; padding:12px; color:var(--gray-500);">Status</th>
+                            <th style="border:none; padding:12px; color:var(--gray-500);">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in messages %}
+                        <tr>
+                            <td style="padding:12px; border-color:var(--gray-100);">
+                                <span class="fw-600">{{ msg.sender.full_name }}</span>
+                            </td>
+                            <td style="padding:12px; border-color:var(--gray-100);">
+                                <span class="fw-600">{{ msg.receiver.full_name }}</span>
+                            </td>
+                            <td style="padding:12px; border-color:var(--gray-100); color:var(--gray-600); max-width:300px;">
+                                {{ msg.message_text[:80] }}{% if msg.message_text|length > 80 %}...{% endif %}
+                            </td>
+                            <td style="padding:12px; border-color:var(--gray-100);">
+                                {% if msg.is_read %}
+                                <span style="color:var(--success); font-size:0.8rem;"><i class="fas fa-check-double"></i> Read</span>
+                                {% else %}
+                                <span style="color:var(--warning); font-size:0.8rem;"><i class="fas fa-clock"></i> Unread</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding:12px; border-color:var(--gray-100); color:var(--gray-400); font-size:0.82rem; white-space:nowrap;">
+                                {{ msg.sent_at.strftime('%b %d, %I:%M %p') }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% if not messages %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4" style="color:var(--gray-400);">No messages yet.</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

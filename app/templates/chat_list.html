@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Messages - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<section style="background:var(--gradient-1); padding:50px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.2rem; font-weight:800;">
+            <i class="fas fa-comments"></i> Messages
+        </h1>
+        <p style="opacity:0.8;">Your conversations with skill exchange partners</p>
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                {% if conversations %}
+                <div class="dash-content-card" style="padding:0; overflow:hidden;">
+
+                    {% for conv in conversations %}
+                    <a href="{{ url_for('chat.chat_room', user_id=conv.partner.id) }}" class="text-decoration-none">
+                        <div class="d-flex align-items-center gap-3 p-4" style="border-bottom:1px solid var(--gray-100); transition:all 0.2s ease; {% if conv.unread > 0 %}background:rgba(79,70,229,0.03);{% endif %}" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='{% if conv.unread > 0 %}rgba(79,70,229,0.03){% else %}white{% endif %}'">
+
+                            <!-- Avatar -->
+                            <div style="position:relative;">
+                                <div style="width:52px;height:52px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.2rem;">
+                                    {{ conv.partner.full_name[0] }}
+                                </div>
+                            </div>
+
+                            <!-- Message Preview -->
+                            <div class="flex-grow-1" style="min-width:0;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 fw-bold" style="color:var(--gray-800); font-size:0.95rem;">
+                                        {{ conv.partner.full_name }}
+                                    </h6>
+                                    {% if conv.last_message %}
+                                    <small style="color:var(--gray-400); font-size:0.8rem; white-space:nowrap;">
+                                        {{ conv.last_message.sent_at.strftime('%b %d, %I:%M %p') }}
+                                    </small>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if conv.last_message %}
+                                    <p class="mb-0 text-truncate" style="color:var(--gray-500); font-size:0.88rem; max-width:350px;">
+                                        {% if conv.last_message.sender_id == current_user.id %}
+                                        <span style="color:var(--gray-400);">You: </span>
+                                        {% endif %}
+                                        {{ conv.last_message.message_text }}
+                                    </p>
+                                    {% endif %}
+
+                                    {% if conv.unread > 0 %}
+                                    <span style="background:var(--primary); color:white; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:700; flex-shrink:0;">
+                                        {{ conv.unread }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                </div>
+
+                {% else %}
+
+                <!-- No Conversations -->
+                <div class="dash-content-card text-center py-5">
+                    <div style="font-size:4rem; opacity:0.15; margin-bottom:16px;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4 class="fw-bold" style="color:var(--gray-700);">No Conversations Yet</h4>
+                    <p style="color:var(--gray-500); max-width:400px; margin:8px auto 24px;">
+                        Start a conversation by visiting someone's profile and clicking the "Send Message" button.
+                    </p>
+                    <a href="{{ url_for('skills.explore') }}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Explore Members
+                    </a>
+                </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

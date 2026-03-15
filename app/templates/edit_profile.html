@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile - SkillSwap{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card card border-0">
+                    <div class="card-body">
+                        <div class="auth-header">
+                            <div class="auth-icon" style="background:var(--gradient-4);">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <h2>Edit Profile</h2>
+                            <p>Update your personal information</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('profile.edit_profile') }}" enctype="multipart/form-data">
+
+                            <!-- Profile Picture -->
+                            <div class="mb-4 text-center">
+                                <div style="width:100px;height:100px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:2.5rem;margin:0 auto 12px;overflow:hidden;" id="profilePreview">
+                                    {% if user.profile_pic and user.profile_pic != 'default.png' %}
+                                    <img src="{{ url_for('static', filename='images/avatars/' + user.profile_pic) }}" style="width:100%;height:100%;object-fit:cover;">
+                                    {% else %}
+                                    {{ user.full_name[0] }}
+                                    {% endif %}
+                                </div>
+                                <label for="profilePicInput" class="btn btn-sm btn-outline-dark" style="cursor:pointer; border-radius:var(--radius-full);">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </label>
+                                <input type="file" name="profile_pic" id="profilePicInput" accept="image/*" style="display:none;" onchange="previewImage(this)">
+                                <br>
+                                <small style="color:var(--gray-400);">JPG, PNG or GIF. Max 5MB.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="full_name" class="form-control" value="{{ user.full_name }}" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" value="{{ user.phone or '' }}" placeholder="+92 300 1234567">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">City</label>
+                                <select name="city" class="form-select">
+                                    <option value="">Select your city</option>
+                                    {% for city in ['Karachi','Lahore','Islamabad','Rawalpindi','Peshawar','Quetta','Multan','Faisalabad','Hyderabad','Sialkot','Gujranwala','Bahawalpur','Sargodha','Sukkur','Mardan'] %}
+                                    <option value="{{ city }}" {% if user.city == city %}selected{% endif %}>{{ city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Bio</label>
+                                <textarea name="bio" class="form-control" rows="4" placeholder="Tell us about yourself..." style="border-radius:var(--radius);">{{ user.bio or '' }}</textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('profile.my_profile') }}" style="color:var(--gray-500); text-decoration:none;">
+                                    <i class="fas fa-arrow-left"></i> Back to Profile
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profilePreview').innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;">';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}
+
+{% endblock %}

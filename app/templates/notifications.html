@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Notifications - SkillSwap{% endblock %}
+
+{% block content %}
+
+<section style="background:var(--gradient-1); padding:50px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.2rem; font-weight:800;">
+            <i class="fas fa-bell"></i> Notifications
+        </h1>
+        <p style="opacity:0.8;">Stay updated with your skill exchange activity</p>
+    </div>
+</section>
+
+<section class="section section-gray">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <!-- Actions -->
+                {% if notifications %}
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="mb-0" style="color:var(--gray-600); font-weight:500;">
+                        {{ notifications|length }} notification{{ 's' if notifications|length != 1 else '' }}
+                    </p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('notifications.mark_all_read') }}" class="btn btn-sm btn-outline-dark">
+                            <i class="fas fa-check-double"></i> Mark All Read
+                        </a>
+                        <a href="{{ url_for('notifications.clear_all') }}" class="btn btn-sm" style="background:rgba(239,68,68,0.1); color:var(--danger);" onclick="return confirm('Clear all notifications?');">
+                            <i class="fas fa-trash"></i> Clear All
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="dash-content-card" style="padding:0; overflow:hidden;">
+
+                    {% for notif in notifications %}
+                    <a href="{{ url_for('notifications.mark_read', notif_id=notif.id) }}" class="text-decoration-none">
+                        <div class="d-flex align-items-start gap-3 p-4" style="border-bottom:1px solid var(--gray-100); {% if not notif.is_read %}background:rgba(79,70,229,0.03);{% endif %} transition:all 0.2s ease;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='{% if not notif.is_read %}rgba(79,70,229,0.03){% else %}white{% endif %}'">
+
+                            <!-- Icon -->
+                            <div style="width:42px;height:42px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                                {% if notif.notif_type == 'review' %}background:rgba(245,158,11,0.1); color:var(--warning);
+                                {% elif notif.notif_type == 'match' %}background:rgba(16,185,129,0.1); color:var(--success);
+                                {% elif notif.notif_type == 'message' %}background:rgba(79,70,229,0.1); color:var(--primary);
+                                {% elif notif.notif_type == 'success' %}background:rgba(16,185,129,0.1); color:var(--success);
+                                {% else %}background:rgba(59,130,246,0.1); color:var(--info);{% endif %}">
+                                <i class="fas
+                                    {% if notif.notif_type == 'review' %}fa-star
+                                    {% elif notif.notif_type == 'match' %}fa-handshake
+                                    {% elif notif.notif_type == 'message' %}fa-comment
+                                    {% elif notif.notif_type == 'success' %}fa-check-circle
+                                    {% else %}fa-bell{% endif %}"></i>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="mb-0 fw-bold" style="color:var(--gray-800); font-size:0.95rem;">
+                                        {{ notif.title }}
+                                    </h6>
+                                    {% if not notif.is_read %}
+                                    <span style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0;"></span>
+                                    {% endif %}
+                                </div>
+                                <p class="mb-1" style="color:var(--gray-500); font-size:0.9rem;">{{ notif.message }}</p>
+                                <small style="color:var(--gray-400);">{{ notif.created_at.strftime('%b %d, %Y at %I:%M %p') }}</small>
+                            </div>
+
+                        </div>
+                    </a>
+                    {% endfor %}
+
+                    {% if not notifications %}
+                    <div class="text-center py-5">
+                        <div style="font-size:4rem; opacity:0.15;"><i class="fas fa-bell-slash"></i></div>
+                        <h4 class="fw-bold" style="color:var(--gray-700);">No Notifications</h4>
+                        <p style="color:var(--gray-500);">You're all caught up! Check back later.</p>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

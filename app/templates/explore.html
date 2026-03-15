@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Explore Skills - SkillSwap{% endblock %}
+
+{% block content %}
+
+<!-- Explore Header -->
+<section style="background:var(--gradient-1); padding:60px 0; color:white; text-align:center;">
+    <div class="container">
+        <h1 style="font-size:2.5rem; font-weight:800; letter-spacing:-1px; margin-bottom:12px;">
+            Explore Skills & People
+        </h1>
+        <p style="opacity:0.8; font-size:1.1rem; margin-bottom:30px;">
+            Find the perfect skill exchange partner from our growing community
+        </p>
+
+        <!-- Search Bar -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form method="GET" action="{{ url_for('skills.explore') }}">
+                    <div class="input-group input-group-lg" style="border-radius:var(--radius-full); overflow:hidden; box-shadow:var(--shadow-2xl);">
+                        <input type="text" name="search" class="form-control border-0 py-3" placeholder="Search skills... e.g. Python, Guitar, English" value="{{ search }}" style="font-size:1rem;">
+                        <select name="city" class="form-select border-0" style="max-width:180px; font-size:0.95rem;">
+                            <option value="">All Cities</option>
+                            {% for city in cities %}
+                            <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-warning px-4 fw-bold" type="submit">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Results -->
+<section class="section section-gray">
+    <div class="container">
+
+        <!-- Results Count -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0" style="color:var(--gray-700);">
+                <i class="fas fa-users" style="color:var(--primary);"></i>
+                {{ users|length }} member{{ 's' if users|length != 1 else '' }} found
+            </h5>
+            {% if search %}
+            <a href="{{ url_for('skills.explore') }}" class="btn btn-sm btn-outline-dark">
+                <i class="fas fa-times"></i> Clear Filters
+            </a>
+            {% endif %}
+        </div>
+
+        {% if users %}
+        <div class="row g-4">
+            {% for user in users %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100" style="border:1px solid var(--gray-200); border-radius:var(--radius-lg);">
+                    <div class="card-body p-4">
+
+                        <!-- User Header -->
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div style="width:55px;height:55px;border-radius:50%;background:var(--gradient-1);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.3rem;">
+                                {{ user.full_name[0] }}
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold" style="font-size:1.05rem;">{{ user.full_name }}</h5>
+                                {% if user.city %}
+                                <small style="color:var(--gray-500);">
+                                    <i class="fas fa-map-marker-alt"></i> {{ user.city }}
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Bio -->
+                        {% if user.bio %}
+                        <p style="color:var(--gray-500); font-size:0.9rem; margin-bottom:16px;">
+                            {{ user.bio[:80] }}{% if user.bio|length > 80 %}...{% endif %}
+                        </p>
+                        {% endif %}
+
+                        <!-- Skills Offering -->
+                        <div class="mb-3">
+                            <small class="fw-bold" style="color:var(--gray-500); text-transform:uppercase; letter-spacing:1px; font-size:0.75rem;">
+                                Can Teach
+                            </small>
+                            <div class="mt-1">
+                                {% for skill in user.skills_offering[:4] %}
+                                <span class="skill-badge offering" style="font-size:0.8rem; padding:5px 12px;">
+                                    {{ skill.skill_name }}
+                                </span>
+                                {% endfor %}
+                                {% if user.skills_offering|length > 4 %}
+                                <span style="color:var(--gray-400); font-size:0.8rem;">+{{ user.skills_offering|length - 4 }} more</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Skills Wanted -->
+                        {% if user.skills_wanted %}
+                        <div class="mb-3">
+                            <small class="fw-bold" style="color:var(--gray-500); text-transform:uppercase; letter-spacing:1px; font-size:0.75rem;">
+                                Wants to Learn
+                            </small>
+                            <div class="mt-1">
+                                {% for skill in user.skills_wanted[:3] %}
+                                <span class="skill-badge wanted" style="font-size:0.8rem; padding:5px 12px;">
+                                    {{ skill.skill_name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- View Profile Button -->
+                        <a href="{{ url_for('profile.view_profile', user_id=user.id) }}" class="btn btn-primary btn-sm w-100 mt-2">
+                            View Profile <i class="fas fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- No Results -->
+        <div class="text-center py-5">
+            <div style="font-size:4rem; opacity:0.2; margin-bottom:16px;">
+                <i class="fas fa-search"></i>
+            </div>
+            <h4 class="fw-bold" style="color:var(--gray-700);">No members found</h4>
+            <p style="color:var(--gray-500);">Try adjusting your search criteria or browse all members.</p>
+            <a href="{{ url_for('skills.explore') }}" class="btn btn-primary">
+                Browse All Members
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
